@@ -5,9 +5,7 @@ import threading
 from includes.config import *
 
 
-def gen_address(
-    word: str, thread: threading, start: bool = True, end: bool = True
-) -> None:
+def gen_address(word: str, thread: int, start: bool = True, end: bool = True) -> None:
     found = []
     count = 1
     addresses_count = 1
@@ -35,21 +33,3 @@ def gen_address(
             )
             addresses_count += 1
         count += 1
-
-
-def run(words):
-    threads = list()
-    for i, x in enumerate(words):
-        x = threading.Thread(target=gen_address, args=(x, i + 1))
-        threads.append(x)
-        x.start()
-
-    for thread in threads:
-        thread.join()
-
-
-# 3 letters will generate instantly..
-# 4-5 letters - approx 10-30 seconds
-# 6 + - ?????? - Depends on CPU but > 1 hour..
-words = "abcdef", "123456", "abcde", "12345"
-run(words)
