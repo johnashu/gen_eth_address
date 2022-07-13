@@ -7,7 +7,7 @@ def open_file(fn: str) -> list:
 
 
 def open_json(fn: str) -> dict:
-    with open(fn, "r", encoding="utf-8") as j:
+    with open(f"{fn}.json", "r", encoding="utf-8") as j:
         return json.load(j)
 
 

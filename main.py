@@ -1,5 +1,5 @@
 import threading
-from gen.gen_add import gen_address
+from gen_eth_address.gen.gen_add import gen_address
 
 
 def run(words, **kw):
@@ -17,5 +17,5 @@ if __name__ == "__main__":
     # 3 letters will generate instantly..
     # 4-5 letters - approx 10-30 seconds
     # 6 + - ?????? - Depends on CPU but > 1 hour..
-    words = "abcde", "12345"
-    run(words, start=True, end=False)
+    words = "dead", "1234"
+    run(words, start=False, end=True, save_as_json=True, num_to_find=10)
