@@ -2,7 +2,7 @@ from secrets import token_bytes
 from coincurve import PublicKey
 from sha3 import keccak_256
 import threading
-from gen_eth_address.includes.config import *
+from includes.config import *
 
 
 def gen_address(
