@@ -1,3 +1,4 @@
 pyOpenSSL
 coincurve
 pysha3
+eth-utilss

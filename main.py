@@ -18,4 +18,6 @@ if __name__ == "__main__":
     # 4-5 letters - approx 10-30 seconds
     # 6 + - ?????? - Depends on CPU but > 1 hour..
     words = "C02", 
-    run(words, start=False, end=True, save_as_json=True, num_to_find=10)
+    # gen_address(words, 1, start=True, end=True, save_as_json=True, num_to_find=2)
+    run(words, start=False, end=True, save_as_json=True, num_to_find=2)
+    

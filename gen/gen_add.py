@@ -1,9 +1,10 @@
+
 from secrets import token_bytes
 from coincurve import PublicKey
 from sha3 import keccak_256
 import threading
 from includes.config import *
-
+from eth_utils import to_checksum_address
 
 def gen_address(
     word: str,
@@ -25,23 +26,38 @@ def gen_address(
                 save_json(fn, found)
             return found
         private_key = keccak_256(token_bytes(32)).digest()
-        public_key = PublicKey.from_valid_secret(private_key).format(compressed=False)[
-            1:
-        ]
-        addr = keccak_256(public_key).digest()[-20:].hex()
-        f = False
-        if addr.lower().startswith(word) and start and addr not in found.keys():
-            f = True
+        public_key = PublicKey.from_valid_secret(private_key).format(compressed=False)[1:]
+        addr = keccak_256(public_key).digest()[-20:]
+        addr_hex = addr.hex()
+        
+        # Convert to checksum address (mixed case)
+        checksum_addr = to_checksum_address(addr_hex)
+        
+        s = False
+        e = False
+        if checksum_addr[2:].startswith(word) and start and checksum_addr not in found.keys():
+            s = True
             t = "Start"
 
-        if addr.lower().endswith(word) and end and addr not in found.keys():
-            f = True
+        if checksum_addr[2:].endswith(word) and end and checksum_addr not in found.keys():
+            e = True
             t = "End"
 
+        f = False
+        if start and end:
+            f = s and e
+        elif start:
+            f = s
+        elif end:
+            f = e
+
         if f:
-            found[f"0x{addr}"] = f"0x{private_key.hex()}"
+            found[checksum_addr] = f"0x{private_key.hex()}"
             log.info(
-                f"\nThread:{thread}\nFound number {addresses_count}\nAddresses checked: {count}\nWord found : {word}\nprivate_key: {private_key.hex()}\neth addr: 0x{addr}\nType: {t}"
+                f"\nThread:{thread}\nFound number {addresses_count}\nAddresses checked: {count}\nWord found : {word}\nprivate_key: {private_key.hex()}\neth addr: {checksum_addr}\nType: {t}"
             )
             addresses_count += 1
+        
+        if count % 10000 == 0:
+            print(f"Checked {count} addresses")
         count += 1
